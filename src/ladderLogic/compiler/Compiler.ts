@@ -10,13 +10,14 @@ import { Span } from "./Span"
 export interface Program {
     makeDefaultState(): Record<string, boolean>
     iterate(state: Record<string, boolean>, prevState: Record<string, boolean>): { newState: Record<string, boolean>, componentState: Record<string, boolean> }
+    refs: string[]
 }
 
 export class Compiler {
     public compile(code: string) {
         const program = this.parse(code)
         if (program instanceof Diagnostic) return [program]
-        let result
+        let result: Program
         try {
             result = runString({
                 env: {},
@@ -27,7 +28,7 @@ export class Compiler {
                     [...program.refs.values()].map(v => `        ${v}: false,`),
                     "    }),",
                     "    iterate(state, prevState) {",
-                    "        const newState = this.makeDefaultValue",
+                    "        const newState = this.makeDefaultState()",
                     [...(function* () {
                         yield ""
 
@@ -53,10 +54,11 @@ export class Compiler {
                                 if (node instanceof SwitchNode) {
                                     if (node.type == "normal") yield `${prefix} ${node.prev} && state.${node.ref}`
                                     if (node.type == "inverted") yield `${prefix} ${node.prev} && !state.${node.ref}`
-                                    if (node.type == "positive") yield `${prefix} ${node.prev} && state.${node.ref} && prevState.${node.ref}`
+                                    if (node.type == "positive") yield `${prefix} ${node.prev} && state.${node.ref} && !prevState.${node.ref}`
+                                    if (node.type == "negative") yield `${prefix} ${node.prev} && !state.${node.ref} && prevState.${node.ref}`
                                     continue
                                 } else if (node instanceof CoilNode) {
-                                    yield `        const ${node.id} = ${node.prev}; newState.${node.ref} = ${node.invert ? "!" : ""}${node.id}`
+                                    yield `        const ${node.id} = ${node.prev}; newState.${node.ref} ||= ${node.invert ? "!" : ""}${node.id}`
                                     continue
                                 } else if (node instanceof SocketNode) {
                                     yield `        const ${node.id} = ${node.prev} || ${node.ref!.id}`
@@ -82,7 +84,9 @@ export class Compiler {
             return [new Diagnostic("Failed codegen: " + err.message, null)]
         }
 
-        return result as Program
+        result.refs = [...program.refs]
+
+        return result
     }
 
     public parse(code: string) {
