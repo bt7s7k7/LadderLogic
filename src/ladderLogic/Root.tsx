@@ -34,9 +34,9 @@ export const Root = (defineComponent({
                 <div class="flex row border-top center-cross">
                     <Button clear> <Icon icon={mdiSkipPrevious} /> </Button>
                     <pre class="my-0 mx-2">Tick: {tick.value.toString().padStart(3, " ")}</pre>
-                    <Button clear> <Icon icon={mdiPause} /> </Button>
+                    <Button onClick={() => STATE.running = false} clear> <Icon icon={mdiPause} /> </Button>
                     <Button clear onClick={() => STATE.iterateProgram()}> <Icon icon={mdiSkipNext} /> </Button>
-                    <Button clear> <Icon icon={mdiFastForward} /> </Button>
+                    <Button onClick={() => STATE.running = true} class={[STATE.running ? "text-success" : "text-white"]} clear> <Icon icon={mdiFastForward} /> </Button>
                 </div>
                 <StateView class="flex-basis-300 border-top" />
             </div>

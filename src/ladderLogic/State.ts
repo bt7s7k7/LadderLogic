@@ -14,6 +14,7 @@ class State extends EventListener {
     public diagnostics: Diagnostic[] = []
     public program: Program | null = null
     public programRunner: ProgramRunner | null = null
+    public running = true
 
     public runCompiler() {
         this.diagnostics = []
@@ -59,5 +60,9 @@ class State extends EventListener {
 window.addEventListener("beforeunload", () => {
     localStorage.setItem("ladder:code", STATE.code)
 })
+
+setInterval(() => {
+    if (STATE.running) STATE.iterateProgram()
+}, 100)
 
 export const STATE = new State()
