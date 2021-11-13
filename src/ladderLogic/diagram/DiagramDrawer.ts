@@ -5,8 +5,8 @@ import { EventListener } from "../../eventLib/EventListener"
 import { STATE } from "../State"
 import { Component } from "./DiagramLayout"
 
-const COMPONENT_SIZE = 60
-const PADDING = 35
+const COMPONENT_SIZE = 30
+const PADDING = 15
 const COLOR_ON = Color.green
 const COLOR_OFF = Color.white.lerp(Color.black, 0.5)
 
@@ -45,7 +45,7 @@ export class DiagramDrawer extends EventListener {
 
                         this.drawer.setStyle(Color.white)
                         if (component.sprite == "positive" || component.sprite == "negative") {
-                            this.drawer.fillText(component.sprite == "positive" ? "P" : "N", new Point(x + COMPONENT_SIZE / 2, COMPONENT_SIZE / 2), { baseline: "middle", align: "center", size: 15 })
+                            this.drawer.fillText(component.sprite == "positive" ? "P" : "N", new Point(x + COMPONENT_SIZE / 2, COMPONENT_SIZE / 2), { baseline: "middle", align: "center", size: 10 })
                         }
                     } else if (component.type == "coil") {
                         this.drawer.beginPath()
@@ -79,7 +79,7 @@ export class DiagramDrawer extends EventListener {
                     }
 
                     const ref = variableStates[component.ref] ?? false
-                    this.drawer.setStyle(ref ? COLOR_ON : COLOR_OFF).fillText(component.ref, new Point(x + COMPONENT_SIZE / 2, COMPONENT_SIZE * 1.2), { align: "center", baseline: "middle", size: 20 })
+                    this.drawer.setStyle(ref ? COLOR_ON : COLOR_OFF).fillText(component.ref, new Point(x + COMPONENT_SIZE / 2, COMPONENT_SIZE * 1.2), { align: "center", baseline: "middle", size: 12 })
                 } else if (component.type == "socket") {
                     this.drawer.setStyle(input ? COLOR_ON : COLOR_OFF)
                     this.drawer.beginPath()
