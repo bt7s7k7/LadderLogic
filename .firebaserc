@@ -1,0 +1,14 @@
+{
+    "projects": {
+        "default": "various-hosting"
+    },
+    "targets": {
+        "various-hosting": {
+            "hosting": {
+                "ladder-logic": [
+                    "ladder-logic"
+                ]
+            }
+        }
+    }
+}
