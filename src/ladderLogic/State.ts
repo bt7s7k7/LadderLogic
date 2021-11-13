@@ -3,6 +3,7 @@ import { EventEmitter } from "../eventLib/EventEmitter"
 import { EventListener } from "../eventLib/EventListener"
 import { Compiler, Program } from "./compiler/Compiler"
 import { Diagnostic } from "./compiler/Diagnostic"
+import { DiagramLayout } from "./diagram/DiagramLayout"
 import { ProgramRunner } from "./execution/ProgramRunner"
 
 class State extends EventListener {
@@ -14,12 +15,14 @@ class State extends EventListener {
     public diagnostics: Diagnostic[] = []
     public program: Program | null = null
     public programRunner: ProgramRunner | null = null
+    public diagramLayout: DiagramLayout | null = null
     public running = true
 
     public runCompiler() {
         this.diagnostics = []
         this.program = null
         this.programRunner = null
+        this.diagramLayout = null
 
         const result = this.compiler.compile(this.code)
         if (result instanceof Array) {
@@ -30,6 +33,7 @@ class State extends EventListener {
 
         this.program = result
         this.programRunner = new ProgramRunner(result)
+        this.diagramLayout = DiagramLayout.create(this.program)
         this.onStateChanged.emit()
     }
 
@@ -72,3 +76,5 @@ setInterval(() => {
 }, 100)
 
 export const STATE = new State()
+// @ts-ignore
+window._state = STATE

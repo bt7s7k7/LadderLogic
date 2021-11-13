@@ -5,7 +5,7 @@ import { Button } from "../vue3gui/Button"
 import { Icon } from "../vue3gui/Icon"
 import { CodeEditor } from "./compiler/CodeEditor"
 import { DiagnosticView } from "./compiler/DiagnosticView"
-import { ElementView } from "./element/ElementView"
+import { DiagramView } from "./diagram/DiagramView"
 import { StateView } from "./execution/StateView"
 import { STATE } from "./State"
 import "./style.scss"
@@ -27,7 +27,7 @@ export const Root = (defineComponent({
                         {STATE.diagnostics.map(diagnostic => (
                             <DiagnosticView diagnostic={diagnostic} />
                         ))}
-                        <ElementView class="absolute-view border-right" />
+                        {STATE.diagramLayout && <DiagramView class="absolute-fill border-right" />}
                     </div>
                     <CodeEditor class="flex-fill" vModel={STATE.code} onChange={() => STATE.onCodeChanged.emit()} />
                 </div>

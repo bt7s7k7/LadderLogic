@@ -1,3 +1,4 @@
+import { markRaw } from "vue"
 import { autoFilter, runString } from "../../comTypes/util"
 import { Diagnostic } from "./Diagnostic"
 import { CoilNode } from "./nodes/CoilNode"
@@ -12,6 +13,7 @@ export interface Program {
     iterate(state: Record<string, boolean>, prevState: Record<string, boolean>): { newState: Record<string, boolean>, componentState: Record<string, boolean> }
     refs: string[]
     source: string
+    lines: LineNode[]
 }
 
 export class Compiler {
@@ -35,14 +37,16 @@ export class Compiler {
 
                         const componentVars: string[] = []
                         const processed = new Set<LineNode>()
+                        const dependenciesProcessed = new Set<LineNode>()
                         const queue = [...program.lines]
 
                         while (queue.length > 0) {
                             const line = queue.pop()!
                             if (processed.has(line)) continue
-                            if (line.dependencies.length > 0) {
+                            if (line.dependencies.length > 0 && !dependenciesProcessed.has(line)) {
                                 queue.push(line, ...line.dependencies)
-                                line.dependencies.length = 0
+                                dependenciesProcessed.add(line)
+                                continue
                             }
 
                             processed.add(line)
@@ -87,8 +91,9 @@ export class Compiler {
 
         result.refs = [...program.refs]
         result.source = code
+        result.lines = program.lines
 
-        return result
+        return markRaw(result)
     }
 
     public parse(code: string) {
@@ -180,10 +185,10 @@ export class Compiler {
                     }
 
                     if (token.text == ">") {
-                        const plug = new PlugNode(prevID, token.span, lineNode)
-                        lineNode.children.push(plug)
                         const socket = socketStack.pop()
                         if (!socket) throw new ParsingError("There is no socket to connect this plug", token.span)
+                        const plug = new PlugNode(prevID, token.span, lineNode, socket)
+                        lineNode.children.push(plug)
                         socket.ref = lineNode
                         lineNode.dependent = socket.line
                         socket.line.dependencies.push(lineNode)

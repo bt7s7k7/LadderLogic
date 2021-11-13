@@ -6,6 +6,7 @@ import { SocketNode } from "./SocketNode"
 export class PlugNode extends ASTNode {
     constructor(
         prev: string, span: Span,
-        public readonly line: LineNode
+        public readonly line: LineNode,
+        public readonly target: SocketNode
     ) { super(prev, span) }
 }
