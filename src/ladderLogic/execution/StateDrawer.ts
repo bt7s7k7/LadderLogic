@@ -59,17 +59,13 @@ export class StateDrawer extends EventListener {
         }
 
         for (let i = 0; i < refs.length; i++) {
-            const ref = refs[i]
             const y = i * (TILE_HEIGHT + TILE_PADDING)
-            const x = 100
 
             this.drawer.setStyle(Color.white.opacity(0.1))
                 .beginPath()
                 .move(new Point(0, y + TILE_HEIGHT + TILE_PADDING * 1.5).floor().add(0.5, 0.5))
                 .lineTo(new Point(this.drawer.size.width, y + TILE_HEIGHT + TILE_PADDING * 1.5).floor().add(0.5, 0.5))
                 .stroke()
-
-            this.drawer.setStyle(Color.white).fillText(ref, new Point(x - 10, y + TILE_PADDING + TILE_HEIGHT / 2), { baseline: "middle", align: "right" })
         }
     }
 
