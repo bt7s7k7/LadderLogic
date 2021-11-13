@@ -32,7 +32,7 @@ export const Root = (defineComponent({
                     <CodeEditor class="flex-fill" vModel={STATE.code} onChange={() => STATE.onCodeChanged.emit()} />
                 </div>
                 <div class="flex row border-top center-cross">
-                    <Button clear> <Icon icon={mdiSkipPrevious} /> </Button>
+                    <Button onClick={() => STATE.reset()} clear> <Icon icon={mdiSkipPrevious} /> </Button>
                     <pre class="my-0 mx-2">Tick: {tick.value.toString().padStart(3, " ")}</pre>
                     <Button onClick={() => STATE.running = false} clear> <Icon icon={mdiPause} /> </Button>
                     <Button clear onClick={() => STATE.iterateProgram()}> <Icon icon={mdiSkipNext} /> </Button>

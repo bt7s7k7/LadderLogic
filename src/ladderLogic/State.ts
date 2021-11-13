@@ -41,14 +41,20 @@ class State extends EventListener {
         this.onStateChanged.emit()
     }
 
+    public reset() {
+        this.runCompiler()
+    }
+
     constructor() {
         super()
 
         const self = reactive(this) as this
 
         self.onCodeChanged.add(self, () => {
-            localStorage.setItem("ladder:code", self.code)
-            self.runCompiler()
+            if (self.code != this.program?.source) {
+                localStorage.setItem("ladder:code", self.code)
+                self.runCompiler()
+            }
         })
 
         self.runCompiler()

@@ -11,6 +11,7 @@ export interface Program {
     makeDefaultState(): Record<string, boolean>
     iterate(state: Record<string, boolean>, prevState: Record<string, boolean>): { newState: Record<string, boolean>, componentState: Record<string, boolean> }
     refs: string[]
+    source: string
 }
 
 export class Compiler {
@@ -85,6 +86,7 @@ export class Compiler {
         }
 
         result.refs = [...program.refs]
+        result.source = code
 
         return result
     }
