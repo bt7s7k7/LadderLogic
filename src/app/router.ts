@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
-import { Home } from "./routes/Home"
+import { Root } from "../ladderLogic/Root"
 
 const routes: RouteRecordRaw[] = [
     {
         name: "Home",
         path: "/",
-        component: Home
+        component: Root
     },
     // {
     //     path: '/about',
