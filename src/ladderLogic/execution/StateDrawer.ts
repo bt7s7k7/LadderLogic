@@ -18,16 +18,16 @@ export class StateDrawer extends EventListener {
         const states = STATE.programRunner.states
         const stateLimit = STATE.programRunner.STATE_LIMIT
         const padding = stateLimit - states.length
-        const tileSize = (this.drawer.size.width) / stateLimit
+        const tileSize = (this.drawer.size.width) / (stateLimit - 1)
 
         let last: Record<string, boolean> = {}
 
 
         for (let i = 0; i < stateLimit; i++) {
             const state = states[i - padding]
-            const x = i * tileSize + 100
+            const x = i * tileSize + 100 - tileSize
 
-            if (i != stateLimit - 1) {
+            if (i != stateLimit - 1 && i != 0) {
                 this.drawer.setStyle(Color.white.opacity(0.1))
                     .beginPath()
                     .move(new Point(x, 0))
@@ -36,19 +36,21 @@ export class StateDrawer extends EventListener {
             }
 
             if (state) {
-                this.drawer.setStyle(Color.green)
-                for (let i = 0; i < refs.length; i++) {
-                    const ref = refs[i]
-                    const y = TILE_PADDING + i * (TILE_HEIGHT + TILE_PADDING)
+                if (i != 0) {
+                    this.drawer.setStyle(Color.green)
+                    for (let i = 0; i < refs.length; i++) {
+                        const ref = refs[i]
+                        const y = TILE_PADDING + i * (TILE_HEIGHT + TILE_PADDING)
 
-                    const startY = y + (last[ref] ? 0 : TILE_HEIGHT)
-                    const endY = y + (state[ref] ? 0 : TILE_HEIGHT)
-                    this.drawer.beginPath()
-                        .move(new Point(x, startY).floor().add(0.5, 0.5))
-                        .lineTo(new Point(x + tileSize / 2, startY).floor().add(0.5, 0.5))
-                        .lineTo(new Point(x + tileSize / 2, endY).floor().add(0.5, 0.5))
-                        .lineTo(new Point(x + tileSize, endY).floor().add(0.5, 0.5))
-                        .stroke()
+                        const startY = y + (last[ref] ? 0 : TILE_HEIGHT)
+                        const endY = y + (state[ref] ? 0 : TILE_HEIGHT)
+                        this.drawer.beginPath()
+                            .move(new Point(x, startY).floor().add(0.5, 0.5))
+                            .lineTo(new Point(x + tileSize / 2, startY).floor().add(0.5, 0.5))
+                            .lineTo(new Point(x + tileSize / 2, endY).floor().add(0.5, 0.5))
+                            .lineTo(new Point(x + tileSize, endY).floor().add(0.5, 0.5))
+                            .stroke()
+                    }
                 }
 
                 last = state
