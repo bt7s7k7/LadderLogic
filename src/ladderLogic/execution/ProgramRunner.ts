@@ -2,7 +2,7 @@ import { markRaw } from "vue"
 import { Program } from "../compiler/Compiler"
 
 export class ProgramRunner {
-    public readonly STATE_LIMIT = 20
+    public readonly STATE_LIMIT = 26
     public tick = 0
 
     public readonly states: Record<string, boolean>[] = []
